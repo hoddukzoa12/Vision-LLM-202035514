@@ -17,7 +17,7 @@
 
 | Day | 날짜 | 실습 노트북 | 과제 |
 |---|---|---|---|
-| Day01 | 10/10 (토) | [`00_Initial-Setup`](00_Initial-Setup.ipynb), [`01_Linux-and-Python`](01_Linux-and-Python.ipynb) | – |
+| Day01 | 10/10 (토) | [`00_Initial-Setup`](00_Initial-Setup.ipynb), [`01_Linux-and-Python`](01_Linux-and-Python.ipynb) | [`2026-10-10/`](2026-10-10/) |
 
 | 프로젝트 | 주제 | 상태 |
 |---|---|---|
