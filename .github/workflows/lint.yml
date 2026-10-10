@@ -1,0 +1,24 @@
+# 이름 규칙 검사 (GUIDE.md §5, 설정: ruff.toml)
+# push / PR 마다 .py 와 .ipynb 의 snake_case / PascalCase 위반을 검사한다.
+
+name: lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  naming:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff
+        run: pip install ruff==0.17.0
+
+      - name: Check naming (pep8-naming)
+        run: ruff check --output-format github .
