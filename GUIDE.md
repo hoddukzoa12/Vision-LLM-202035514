@@ -228,13 +228,9 @@ python main.py
 
 이름 규칙은 **Ruff**(pep8-naming, 설정: `ruff.toml`)로 `.py`와 `.ipynb` 노트북 셀까지 검사한다.
 
-- **로컬 (커밋 전):**
-  ```bash
-  source .venv/bin/activate
-  pip install ruff==0.17.0     # 최초 1회
-  ruff check .
-  ```
-- **CI:** push할 때마다 GitHub Actions(`.github/workflows/lint.yml`)가 같은 검사를 돌린다. 위반이 있으면 GitHub 커밋 옆에 ❌가 표시된다. 제출 시각에는 영향이 없지만 고치려면 커밋을 하나 더 해야 하므로 **로컬에서 먼저 확인**한다.
+- **CI에서만 검사한다.** push할 때마다 GitHub Actions(`.github/workflows/lint.yml`)가 검사하고, 위반이 있으면 GitHub 커밋 옆에 ❌가 표시된다.
+- **Jetson에는 Ruff를 설치하지 않는다** (수업 안내 외의 패키지는 임의로 설치하지 않는다).
+- ❌가 뜨면 GitHub Actions 로그에서 위반 줄을 확인하고, **고친 커밋을 하나 더 push**한다. 제출 시각에는 영향이 없다. 마감 직전에는 push 후 CI 결과까지 확인할 시간을 남겨 둔다.
 - 예외 허용: `F` (`import torch.nn.functional as F`), `X`, `X_*` (입력 행렬). 예외를 추가하려면 `ruff.toml`의 `extend-ignore-names`에 넣는다.
 - Ruff는 **표기 형식만** 검사한다. `arr`, `tmp`처럼 의미가 불분명한 이름은 직접 점검한다.
 
@@ -249,6 +245,7 @@ AI 사용은 허용되지만 **과도한 의존은 감점**, 이해도는 `w`로
 3. AI가 제시한 "발표 때 받을 만한 질문"에 **스스로 답해본다.** 답 못 하는 부분이 있으면 그 코드는 아직 내 것이 아니다.
 4. 막히면 AI보다 **수업 중·후 강사에게 질문**하는 것을 우선한다 (강의 권장 사항).
 5. **Jetson에 인터넷 브라우저 설치 금지** (위반 시 최종 점수 불이익). Chromium은 삭제 상태를 유지한다.
+6. **Jetson에는 수업 자료·강사 안내에 없는 패키지를 임의로 설치하지 않는다.** AI가 설치를 제안해도 따르지 말고 강사에게 먼저 확인한다.
 
 ---
 
@@ -257,20 +254,18 @@ AI 사용은 허용되지만 **과도한 의존은 감점**, 이해도는 `w`로
 ### 당일 실습 (18:00 전)
 - [ ] 모든 `TODO` 셀을 채우고 **처음부터 다시 실행**해 출력 확인
 - [ ] 예상 출력 형식(주석의 "예상 출력")과 결과가 맞는지 확인
-- [ ] `ruff check .` 통과
 - [ ] `feat(DayNN): ...` 메시지로 commit & push
+- [ ] GitHub Actions ✅ 확인 (❌면 고친 커밋 추가)
 
 ### 과제 (다음 수업 13:00 전)
 - [ ] `YYYY-MM-DD/` 폴더, 실습 파일과 별개인 독립 과제 파일
 - [ ] `README.md`: 실행 방법, 의존성, 참고 사항
 - [ ] 새 터미널에서 README에 적힌 방법대로 실행해 보기
-- [ ] `ruff check .` 통과
 - [ ] 모든 줄을 내가 설명할 수 있는가?
-- [ ] commit & push 후 GitHub에서 확인
+- [ ] commit & push 후 GitHub에서 반영 및 Actions ✅ 확인
 
 ### 프로젝트
 - [ ] `ProjectNN/` 폴더 안에서 독립 실행 가능
 - [ ] `README.md` (+ 최종 프로젝트는 발표 `.pdf`)
-- [ ] `ruff check .` 통과
 - [ ] 시연 시나리오와 예상 질문 준비
-- [ ] commit & push 후 GitHub에서 확인
+- [ ] commit & push 후 GitHub에서 반영 및 Actions ✅ 확인

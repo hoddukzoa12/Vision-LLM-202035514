@@ -53,15 +53,14 @@ VS Code에서 커널 `Vision-LLM (Python3.10)`을 선택해 노트북을 실행�
 
 push마다 GitHub Actions에서 두 가지 규칙을 검사합니다.
 
-| 검사 | 규칙 | 로컬 실행 |
+| 검사 | 규칙 | 로컬 |
 |---|---|---|
-| 이름 규칙 | PEP 8 `snake_case` / `PascalCase` ([Ruff](https://docs.astral.sh/ruff/)) | `ruff check .` |
-| 커밋 메시지 | [Conventional Commits](https://www.conventionalcommits.org/) (영어) | 커밋할 때 자동 (훅) |
+| 이름 규칙 | PEP 8 `snake_case` / `PascalCase` ([Ruff](https://docs.astral.sh/ruff/)) | CI에서만 검사 (Jetson에 설치하지 않음) |
+| 커밋 메시지 | [Conventional Commits](https://www.conventionalcommits.org/) (영어) | 커밋할 때 훅이 자동 검사 |
 
-clone한 기기마다 1회 설정:
+커밋 메시지 훅은 별도 설치 없이 `python3`만 사용합니다. clone한 기기마다 1회 설정:
 
 ```bash
-pip install ruff==0.17.0
 git config core.hooksPath .githooks
 ```
 
