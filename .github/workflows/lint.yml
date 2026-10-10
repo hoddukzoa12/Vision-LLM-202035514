@@ -1,5 +1,6 @@
-# 이름 규칙 검사 (GUIDE.md §5, 설정: ruff.toml)
-# push / PR 마다 .py 와 .ipynb 의 snake_case / PascalCase 위반을 검사한다.
+# 규칙 검사 (GUIDE.md §4, §5)
+#   naming:         .py / .ipynb 의 snake_case / PascalCase 위반 (설정: ruff.toml)
+#   commit-message: 이번 push 에 포함된 커밋의 메시지 형식 (scripts/check_commit_msg.py)
 
 name: lint
 
@@ -22,3 +23,31 @@ jobs:
 
       - name: Check naming (pep8-naming)
         run: ruff check --output-format github .
+
+  commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Check commit messages
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            RANGE="$PR_BASE..$PR_HEAD"
+          elif [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            RANGE="$AFTER~1..$AFTER"      # 새 브랜치: 마지막 커밋만
+          else
+            RANGE="$BEFORE..$AFTER"       # 이번 push 로 추가된 커밋만
+          fi
+          python3 scripts/check_commit_msg.py --range "$RANGE"

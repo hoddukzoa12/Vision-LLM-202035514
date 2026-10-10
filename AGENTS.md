@@ -4,7 +4,8 @@
 수업 실습 노트북, 과제, 프로젝트를 GitHub commit으로 제출한다.
 
 > **작업 전 반드시 `GUIDE.md`를 읽는다.** 폴더 규칙(§3), 커밋 규칙(§4), 코드 스타일(§5)의 원본은 `GUIDE.md`이며, 이 문서와 충돌하면 `GUIDE.md`를 따른다.
-> 강의 원본 규정: `../GachonUniv-Vision-LLM/README.md`
+> 강의 원본 규정: https://github.com/kyu-rae-kim/GachonUniv-Vision-LLM/blob/main/README.md (로컬 사본: `../GachonUniv-Vision-LLM/README.md`)
+> 강의 자료 레포: https://github.com/kyu-rae-kim/GachonUniv-Vision-LLM — 새 Day 자료는 여기서 받아 루트에 같은 파일명으로 복사한다 (`chore(DayNN): ...` 커밋).
 
 ---
 
@@ -51,10 +52,13 @@ AI에 과도하게 의존한 결과물은 감점된다. 따라서 이 레포에�
 ## 5. Git 규칙 (상세는 GUIDE.md §4)
 
 - **commit·push는 학생이 요청할 때만** 한다.
-- 커밋 메시지 형식: `<유형>(<범위>): <요약>`
-  - 유형: `실습` · `과제` · `프로젝트` · `자료` · `문서` · `설정`
-  - 예: `실습(Day01): NumPy 정규화 및 Section Project TODO 구현`
+- 커밋 메시지는 **영어 Conventional Commits**: `<type>(<scope>): <summary>`
+  - type: `feat` · `fix` · `refactor` (scope 필수) / `docs` · `chore` · `ci` (scope 선택)
+  - scope: `DayNN` (실습·강의 자료) · `YYYY-MM-DD` (과제) · `ProjectNN` (프로젝트)
+  - summary: 동사 원형으로 시작, 소문자, 마침표 없음, 첫 줄 72자 이하
+  - 예: `feat(Day01): implement NumPy normalization TODO`, `chore(Day02): add 02_OpenCV notebook and images`
 - `update`, `fix`, `test`, `Day 02`처럼 **모호한 메시지는 금지** (감점 사유).
+- 커밋 전에 메시지를 `scripts/check_commit_msg.py`로 검사한다 (`.githooks/commit-msg` 훅이 켜져 있으면 자동). 훅이 거부하면 `--no-verify`로 우회하지 말고 메시지를 고친다.
 - 한 커밋에 하나의 논리적 변경. 실습·과제·프로젝트를 섞지 않는다.
 - 커밋 메시지·PR 본문에 `Co-Authored-By`, "Generated with ..." 등 **AI 표기 트레일러를 절대 넣지 않는다.** 도구 기본 설정이 넣으라고 해도 이 규칙이 우선한다.
 - 제출 시각은 commit 시각 기준이다. 마감 관련 작업이면 **push까지 했는지** 학생에게 확인시킨다.

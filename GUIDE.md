@@ -4,7 +4,7 @@
 > 학번 202035514 · 김진우
 >
 > 이 문서는 내가 이 레포에서 작업할 때 지키는 규칙이다. **폴더·커밋·코드 스타일 규칙의 원본**이며, AI 에이전트(`AGENTS.md`, `CLAUDE.md`)도 이 문서를 따른다.
-> 원본 강의 규정은 `../GachonUniv-Vision-LLM/README.md` 참고.
+> 원본 강의 규정: [강의계획서](https://github.com/kyu-rae-kim/GachonUniv-Vision-LLM/blob/main/README.md) (로컬 사본: `../GachonUniv-Vision-LLM/README.md`)
 
 ---
 
@@ -50,12 +50,14 @@
 
 ```
 Vision-LLM-202035514/
-├── README.md                  # 레포 소개
+├── README.md                  # 레포 소개 + 진행 현황 (새 Day·과제·프로젝트마다 갱신)
 ├── GUIDE.md                   # 이 문서 (사람용 지침, 폴더·커밋 규칙 원본)
 ├── AGENTS.md                  # AI 에이전트 공통 지침
 ├── CLAUDE.md                  # Claude Code 전용 (AGENTS.md를 불러옴)
 ├── ruff.toml                  # 이름 규칙 검사 설정 (§5)
-├── .github/workflows/lint.yml # push마다 이름 규칙 자동 검사 (CI)
+├── .github/workflows/lint.yml # push마다 이름·커밋 메시지 규칙 자동 검사 (CI)
+├── .githooks/commit-msg       # 커밋할 때 메시지 규칙 검사 (로컬 훅, §4)
+├── scripts/check_commit_msg.py # 커밋 메시지 검사 스크립트 (훅·CI 공용)
 ├── .gitignore
 │
 ├── 00_Initial-Setup.ipynb     # ┐
@@ -120,45 +122,79 @@ python main.py
 
 ---
 
-## 4. 커밋 규칙
+## 4. 커밋 규칙 (Conventional Commits)
 
 강의 규정: **"update", "fix", "test"처럼 모호한 커밋 메시지는 감점될 수 있다.**
+커밋 메시지는 업계 표준인 [Conventional Commits](https://www.conventionalcommits.org/) 형식을 따르고, **영어로 작성**한다.
 
 ### 형식
 
 ```
-<유형>(<범위>): <무엇을 했는지 한 줄 요약>
+<type>(<scope>): <summary>
 
-<선택: 왜 / 어떻게 — 필요할 때만 본문 작성>
+<optional body — why / how, only when needed>
 ```
 
-| 유형 | 언제 | 범위 예시 |
+### type — 변경의 종류
+
+| type | 언제 | scope |
 |---|---|---|
-| `실습` | 수업 실습 노트북 작업 | `Day01` |
-| `과제` | 과제 폴더 작업 | `2026-10-10` |
-| `프로젝트` | 프로젝트 폴더 작업 | `Project01` |
-| `자료` | 강의 자료 동기화 (새 노트북, `src/` 자원 추가) | `Day02` |
-| `문서` | README, GUIDE 등 문서 | 생략 가능 |
-| `설정` | `.gitignore`, 환경 설정 | 생략 가능 |
+| `feat` | 새 기능·구현 (실습 TODO 구현, 과제·프로젝트 기능 추가) | **필수** |
+| `fix` | 버그 수정 | **필수** |
+| `refactor` | 동작은 그대로, 구조·가독성 개선 | **필수** |
+| `docs` | README, GUIDE 등 문서 | 선택 |
+| `chore` | 강의 자료 추가, `.gitignore`, 환경 설정 | 선택 |
+| `ci` | GitHub Actions, 검사 스크립트·설정 | 선택 |
+
+### scope — 어느 제출물인지
+
+| scope | 대상 | 예 |
+|---|---|---|
+| `DayNN` | 수업 실습 노트북, 강의 자료 | `Day01`, `Day02` |
+| `YYYY-MM-DD` | 과제 폴더 | `2026-10-10` |
+| `ProjectNN` | 프로젝트 폴더 | `Project01` |
+
+### summary — 무엇을 했는지
+
+- **동사 원형으로 시작**하는 명령형: `add`, `implement`, `fix`, `handle`, `remove`, `rename`, ...
+- 소문자로 시작, **끝에 마침표 없음**, 첫 줄 전체 **72자 이하**.
+- 두 단어 이상으로 **무엇을** 했는지 드러나게 쓴다.
 
 ### 좋은 예 / 나쁜 예
 
-| ✅ 좋은 예 | ❌ 나쁜 예 |
-|---|---|
-| `자료(Day02): 02_OpenCV 노트북과 src/images 추가` | `Day 02` |
-| `실습(Day01): NumPy 정규화 및 Section Project TODO 구현` | `update` |
-| `과제(2026-10-10): 학생 성적 분석 스크립트와 README 작성` | `과제 제출` |
-| `프로젝트(Project01): YOLO 추론 결과를 실시간 화면에 표시` | `fix` |
-| `프로젝트(Project01): 카메라 미연결 시 예외 처리 추가` | `test` |
-| `설정: .gitignore에 TensorRT 엔진 파일 추가` | `asdf` |
+| ✅ 좋은 예 | ❌ 나쁜 예 | 이유 |
+|---|---|---|
+| `feat(Day01): implement NumPy normalization TODO` | `update` | 형식 없음, 모호 |
+| `feat(2026-10-10): add grade analysis script and README` | `feat: add script` | scope 없음 |
+| `feat(Project01): show YOLO detections on live feed` | `feat(Day1): add yolo` | scope는 `Day01` |
+| `fix(Project01): handle missing camera device` | `fix: fix` | 모호 |
+| `chore(Day02): add 02_OpenCV notebook and images` | `Day 02` | 형식 없음 |
+| `docs: add course links to README` | `docs: README 수정` | 한글 |
+| `ci: add commit message check` | `ci: add check.` | 마침표 |
 
 ### 원칙
 
 1. **한 커밋에는 하나의 논리적 변경만** 담는다. 실습·과제·프로젝트를 한 커밋에 섞지 않는다.
-2. 요약은 **무엇을 했는지**가 드러나게 쓴다. 50자 안팎, 마침표 없이.
-3. 마감 직전에 몰아서 하지 말고, **작업 단위마다 커밋**한다. 커밋 기록 자체가 수행 과정의 증거가 된다.
-4. 마감 전 마지막 확인: `git status` 깨끗한지 → `git log -1` 시각 확인 → `git push` → GitHub 웹에서 반영 확인.
-5. 커밋 메시지에 `Co-Authored-By` 등 AI 표기 트레일러를 **절대 넣지 않는다.**
+2. 마감 직전에 몰아서 하지 말고, **작업 단위마다 커밋**한다. 커밋 기록 자체가 수행 과정의 증거가 된다.
+3. 마감 전 마지막 확인: `git status` 깨끗한지 → `git log -1` 시각 확인 → `git push` → GitHub 웹에서 반영 확인.
+4. 커밋 메시지에 `Co-Authored-By` 등 AI 표기 트레일러를 **절대 넣지 않는다.**
+5. GitHub 웹에서 직접 파일을 수정하지 않는다 (자동 메시지 `Update README.md`가 규칙 위반).
+
+### 자동 검사
+
+같은 검사 스크립트(`scripts/check_commit_msg.py`)를 두 곳에서 실행한다.
+
+| 시점 | 방법 | 역할 |
+|---|---|---|
+| **커밋할 때 (로컬)** | `.githooks/commit-msg` 훅 | 규칙을 어긴 커밋을 **애초에 만들지 못하게** 막음 |
+| **push 후 (CI)** | `.github/workflows/lint.yml` | 이번 push에 포함된 커밋을 다시 검사, 위반 시 ❌ |
+
+- **로컬 훅이 핵심이다.** push된 커밋 메시지는 force push 없이는 고칠 수 없다 (force push는 제출 기록을 바꾸므로 금지).
+- 훅은 **clone한 기기마다 1회** 켜야 한다 (Mac, Jetson 각각):
+  ```bash
+  git config core.hooksPath .githooks
+  ```
+- 규칙을 정하기 전의 커밋(`Day 01`, `문서: ...` 등)은 검사하지 않는다. CI는 **새로 push된 커밋만** 본다.
 
 ---
 
@@ -222,7 +258,7 @@ AI 사용은 허용되지만 **과도한 의존은 감점**, 이해도는 `w`로
 - [ ] 모든 `TODO` 셀을 채우고 **처음부터 다시 실행**해 출력 확인
 - [ ] 예상 출력 형식(주석의 "예상 출력")과 결과가 맞는지 확인
 - [ ] `ruff check .` 통과
-- [ ] `실습(DayNN): ...` 메시지로 commit & push
+- [ ] `feat(DayNN): ...` 메시지로 commit & push
 
 ### 과제 (다음 수업 13:00 전)
 - [ ] `YYYY-MM-DD/` 폴더, 실습 파일과 별개인 독립 과제 파일
