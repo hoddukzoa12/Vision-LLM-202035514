@@ -69,8 +69,6 @@ git config core.hooksPath .githooks
 | 파일 | 내용 |
 |---|---|
 | [`GUIDE.md`](GUIDE.md) | 작업 지침: 제출 기한, 폴더·커밋·코드 스타일 규칙, 제출 전 체크리스트 |
-| [`AGENTS.md`](AGENTS.md) | AI 코딩 도구 공통 지침 |
-| [`CLAUDE.md`](CLAUDE.md) | Claude Code 전용 지침 |
 
 ---
 

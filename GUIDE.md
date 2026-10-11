@@ -3,7 +3,7 @@
 > **Physical AI의 Vision-LLM 융합 시청각 멀티모달 시스템** (강사: 김규래, 2026/10/10 – 11/8, 토·일 13:00–17:30)
 > 학번 202035514 · 김진우
 >
-> 이 문서는 내가 이 레포에서 작업할 때 지키는 규칙이다. **폴더·커밋·코드 스타일 규칙의 원본**이며, AI 에이전트(`AGENTS.md`, `CLAUDE.md`)도 이 문서를 따른다.
+> 이 문서는 내가 이 레포에서 작업할 때 지키는 규칙이다. **폴더·커밋·코드 스타일 규칙의 원본**이며, 로컬 AI 에이전트 지침(`AGENTS.md`, `CLAUDE.md`)도 이 문서를 따른다.
 > 원본 강의 규정: [강의계획서](https://github.com/kyu-rae-kim/GachonUniv-Vision-LLM/blob/main/README.md) (로컬 사본: `../GachonUniv-Vision-LLM/README.md`)
 
 ---
@@ -52,8 +52,8 @@
 Vision-LLM-202035514/
 ├── README.md                  # 레포 소개 + 진행 현황 (새 Day·과제·프로젝트마다 갱신)
 ├── GUIDE.md                   # 이 문서 (사람용 지침, 폴더·커밋 규칙 원본)
-├── AGENTS.md                  # AI 에이전트 공통 지침
-├── CLAUDE.md                  # Claude Code 전용 (AGENTS.md를 불러옴)
+├── AGENTS.md                  # AI 에이전트 공통 지침   ┐ 로컬 전용
+├── CLAUDE.md                  # Claude Code 전용         ┘ (.gitignore, 커밋하지 않음)
 ├── ruff.toml                  # 이름 규칙 검사 설정 (§5)
 ├── .github/workflows/lint.yml # push마다 이름·커밋 메시지 규칙 자동 검사 (CI)
 ├── .githooks/commit-msg       # 커밋할 때 메시지 규칙 검사 (로컬 훅, §4)

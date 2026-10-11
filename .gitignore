@@ -14,3 +14,7 @@ __pycache__/
 
 # 로컬 전용 설정
 .claude/settings.local.json
+
+# AI 에이전트 지침 (로컬 전용, 강사 안내)
+AGENTS.md
+CLAUDE.md
