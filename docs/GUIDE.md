@@ -51,7 +51,7 @@
 ```
 Vision-LLM-202035514/
 ├── README.md                  # 레포 소개 + 진행 현황 (새 Day·과제·프로젝트마다 갱신)
-├── GUIDE.md                   # 이 문서 (사람용 지침, 폴더·커밋 규칙 원본)
+├── docs/GUIDE.md              # 이 문서 (사람용 지침, 폴더·커밋 규칙 원본)
 ├── AGENTS.md                  # AI 에이전트 공통 지침   ┐ 로컬 전용
 ├── CLAUDE.md                  # Claude Code 전용         ┘ (.gitignore, 커밋하지 않음)
 ├── ruff.toml                  # 이름 규칙 검사 설정 (§5)

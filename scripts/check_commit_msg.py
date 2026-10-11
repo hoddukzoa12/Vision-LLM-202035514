@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""커밋 메시지 규칙 검사 (GUIDE.md §4, Conventional Commits).
+"""커밋 메시지 규칙 검사 (docs/GUIDE.md §4, Conventional Commits).
 
 사용법:
     python3 scripts/check_commit_msg.py <메시지 파일>     # commit-msg 훅
@@ -96,7 +96,7 @@ def main(argv):
                 print(f"    - {error}")
 
     if failed:
-        print("\n커밋 메시지 규칙: GUIDE.md §4")
+        print("\n커밋 메시지 규칙: docs/GUIDE.md §4")
         return 1
     print(f"✓ 커밋 메시지 {len(targets)}개 통과")
     return 0

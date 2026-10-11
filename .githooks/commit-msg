@@ -1,4 +1,4 @@
 #!/bin/sh
-# 커밋 메시지 규칙 검사 (GUIDE.md §4)
+# 커밋 메시지 규칙 검사 (docs/GUIDE.md §4)
 # 설정 (clone마다 1회): git config core.hooksPath .githooks
 exec python3 "$(git rev-parse --show-toplevel)/scripts/check_commit_msg.py" "$1"

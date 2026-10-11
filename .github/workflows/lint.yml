@@ -1,4 +1,4 @@
-# 규칙 검사 (GUIDE.md §4, §5)
+# 규칙 검사 (docs/GUIDE.md §4, §5)
 #   naming:         .py / .ipynb 의 snake_case / PascalCase 위반 (설정: ruff.toml)
 #   commit-message: 이번 push 에 포함된 커밋의 메시지 형식 (scripts/check_commit_msg.py)
 

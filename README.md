@@ -36,7 +36,7 @@
 └── src/               # 강의 제공 자원 (이미지, 모델, 데이터셋)
 ```
 
-폴더·커밋·코드 스타일 규칙은 [`GUIDE.md`](GUIDE.md)에 정리했습니다.
+폴더·커밋·코드 스타일 규칙은 [`docs/GUIDE.md`](docs/GUIDE.md)에 정리했습니다.
 
 ## 실행 환경 설정 (Jetson)
 
@@ -68,7 +68,7 @@ git config core.hooksPath .githooks
 
 | 파일 | 내용 |
 |---|---|
-| [`GUIDE.md`](GUIDE.md) | 작업 지침: 제출 기한, 폴더·커밋·코드 스타일 규칙, 제출 전 체크리스트 |
+| [`docs/GUIDE.md`](docs/GUIDE.md) | 작업 지침: 제출 기한, 폴더·커밋·코드 스타일 규칙, 제출 전 체크리스트 |
 
 ---
 

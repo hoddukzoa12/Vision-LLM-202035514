@@ -1,4 +1,4 @@
-# 코드 스타일 검사 — 이름 규칙 (GUIDE.md §5)
+# 코드 스타일 검사 — 이름 규칙 (docs/GUIDE.md §5)
 # 로컬: ruff check .        CI: .github/workflows/lint.yml
 # .py 와 .ipynb (노트북 셀) 모두 검사한다.
 
