@@ -11,7 +11,7 @@ def main():
 
     # TODO: NumPy 연산 함수를 사용하여 배열을 정규화
 
-    np_arr_normalized = np_arr / np_arr.max() #max scaling
+    np_arr_normalized = np_arr / np_arr.max()  # max scaling
     print(np_arr_normalized)
 
 
