@@ -72,7 +72,9 @@ Vision-LLM-202035514/
 │
 ├── 2026-10-10/                # 과제: "과제가 부여된 날짜" 폴더
 │   ├── README.md              #   필수
-│   └── assignment.py          #   실습 파일과 별개인 독립 과제 파일
+│   ├── todo01_normalize.py    #   노트북 TODO를 분리한 독립 파일 (TODO 하나당 하나)
+│   ├── todo02_min_max_scale.py
+│   └── section_project.py     #   Section Project
 │
 └── Project01/                 # 프로젝트: Project01, Project02, Project03
     ├── README.md              #   필수
@@ -82,8 +84,12 @@ Vision-LLM-202035514/
 
 ### 규칙
 
-1. **실습 노트북**은 루트에 강의 자료와 **같은 파일명**(`NN_Topic.ipynb`)으로 둔다. 강의 자료의 마크다운 셀(설명, 저작권 표기)은 수정하지 않고, `TODO` 셀만 채운다.
-2. **실습 노트북은 실행된 상태(출력 포함)로 커밋한다.** 태도 점수는 실습 결과물로 평가된다.
+1. **실습 노트북**은 루트에 강의 자료와 **같은 파일명**(`NN_Topic.ipynb`)으로 둔다. **수업 중 실행한 상태 그대로 올리기만 한다.** 노트북 안의 `TODO` 셀은 채우지 않는다 (강사 안내).
+2. **노트북의 `TODO`는 `.py` 파일로 분리해 과제 폴더에서 구현한다.**
+   - TODO 하나당 파일 하나: `todoNN_<주제>.py` (예: `todo01_normalize.py`), Section Project는 `section_project.py`.
+   - 파일 맨 위 docstring에 **원본 노트북과 셀 번호**를 적는다.
+   - 앞 셀에서 정의된 데이터·`import`를 함께 옮겨 **파일 하나만으로 실행**되게 한다.
+   - TODO 템플릿의 변수명과 출력 형식("예상 출력")은 그대로 유지한다.
 3. **과제 폴더 이름은 과제가 부여된 날짜**, 형식은 `YYYY-MM-DD` (예: `2026-10-10/`).
    - 수업 실습 노트북을 복사해 넣지 않는다. **과제용 독립 파일**을 새로 만든다.
    - `README.md` 필수.
@@ -139,7 +145,7 @@ python main.py
 
 | type | 언제 | scope |
 |---|---|---|
-| `feat` | 새 기능·구현 (실습 TODO 구현, 과제·프로젝트 기능 추가) | **필수** |
+| `feat` | 새 기능·구현 (TODO·과제·프로젝트 구현) | **필수** |
 | `fix` | 버그 수정 | **필수** |
 | `refactor` | 동작은 그대로, 구조·가독성 개선 | **필수** |
 | `docs` | README, GUIDE 등 문서 | 선택 |
@@ -150,7 +156,7 @@ python main.py
 
 | scope | 대상 | 예 |
 |---|---|---|
-| `DayNN` | 수업 실습 노트북, 강의 자료 | `Day01`, `Day02` |
+| `DayNN` | 수업 실습 노트북 업로드, 강의 자료 | `Day01`, `Day02` |
 | `YYYY-MM-DD` | 과제 폴더 | `2026-10-10` |
 | `ProjectNN` | 프로젝트 폴더 | `Project01` |
 
@@ -164,7 +170,7 @@ python main.py
 
 | ✅ 좋은 예 | ❌ 나쁜 예 | 이유 |
 |---|---|---|
-| `feat(Day01): implement NumPy normalization TODO` | `update` | 형식 없음, 모호 |
+| `feat(2026-10-10): implement NumPy normalization TODO` | `update` | 형식 없음, 모호 |
 | `feat(2026-10-10): add grade analysis script and README` | `feat: add script` | scope 없음 |
 | `feat(Project01): show YOLO detections on live feed` | `feat(Day1): add yolo` | scope는 `Day01` |
 | `fix(Project01): handle missing camera device` | `fix: fix` | 모호 |
@@ -252,13 +258,14 @@ AI 사용은 허용되지만 **과도한 의존은 감점**, 이해도는 `w`로
 ## 7. 제출 전 체크리스트
 
 ### 당일 실습 (18:00 전)
-- [ ] 모든 `TODO` 셀을 채우고 **처음부터 다시 실행**해 출력 확인
-- [ ] 예상 출력 형식(주석의 "예상 출력")과 결과가 맞는지 확인
-- [ ] `feat(DayNN): ...` 메시지로 commit & push
+- [ ] 수업 중 실행한 노트북을 **그대로** 루트에 올림 (TODO 셀은 비워 둠)
+- [ ] `chore(DayNN): add NN_Topic practice notebook` 형식으로 commit & push
 - [ ] GitHub Actions ✅ 확인 (❌면 고친 커밋 추가)
+- [ ] README 진행 현황 표에 Day 행 추가
 
 ### 과제 (다음 수업 13:00 전)
-- [ ] `YYYY-MM-DD/` 폴더, 실습 파일과 별개인 독립 과제 파일
+- [ ] 노트북의 `TODO`를 `YYYY-MM-DD/` 폴더에 `.py`로 하나씩 분리
+- [ ] 각 파일이 단독 실행되고, 예상 출력 형식과 결과가 맞는지 확인
 - [ ] `README.md`: 실행 방법, 의존성, 참고 사항
 - [ ] 새 터미널에서 README에 적힌 방법대로 실행해 보기
 - [ ] 모든 줄을 내가 설명할 수 있는가?
