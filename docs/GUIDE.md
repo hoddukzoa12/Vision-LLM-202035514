@@ -232,8 +232,9 @@ python main.py
 
 ### 자동 검사 (Ruff)
 
-이름 규칙은 **Ruff**(pep8-naming, 설정: `ruff.toml`)로 `.py`와 `.ipynb` 노트북 셀까지 검사한다.
+이름 규칙은 **Ruff**(pep8-naming, 설정: `ruff.toml`)로 직접 작성한 `.py` 파일을 검사한다.
 
+- **실습 노트북(`.ipynb`)은 검사하지 않는다.** 강사 코드를 수업 중 실행한 상태 그대로 올리는 파일이라 고칠 수 없기 때문이다 (예: `cX`, `findLocalMaxima`). 과제·프로젝트 코드는 `.py`로 작성하므로 이 규칙의 검사 대상이다.
 - **CI에서만 검사한다.** push할 때마다 GitHub Actions(`.github/workflows/lint.yml`)가 검사하고, 위반이 있으면 GitHub 커밋 옆에 ❌가 표시된다.
 - **Jetson에는 Ruff를 설치하지 않는다** (수업 안내 외의 패키지는 임의로 설치하지 않는다).
 - ❌가 뜨면 GitHub Actions 로그에서 위반 줄을 확인하고, **고친 커밋을 하나 더 push**한다. 제출 시각에는 영향이 없다. 마감 직전에는 push 후 CI 결과까지 확인할 시간을 남겨 둔다.

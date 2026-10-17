@@ -1,8 +1,9 @@
 # 코드 스타일 검사 — 이름 규칙 (docs/GUIDE.md §5)
 # 로컬: ruff check .        CI: .github/workflows/lint.yml
-# .py 와 .ipynb (노트북 셀) 모두 검사한다.
+# 직접 작성한 .py 만 검사한다. 실습 노트북(.ipynb)은 강사 코드를 그대로 올리므로 제외.
 
 target-version = "py310"
+extend-exclude = ["*.ipynb"]
 
 [lint]
 # N: pep8-naming
