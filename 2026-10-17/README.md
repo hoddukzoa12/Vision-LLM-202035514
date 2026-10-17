@@ -9,11 +9,6 @@ CLAHE로 강화한 농구공 binary mask에 Opening·Closing을 적용해 노이
 | `todo01_ball_contour.py` | 모폴로지 연산 → 외곽선 검출 → 농구공 선택 → 외접원·무게중심 | [167], [188], [191], [194], [196], [198] |
 | `results/` | 실행 결과 그림 (PNG) | |
 
-## 실행 환경
-- 기기: NVIDIA Jetson Orin / Python 3.10
-- 의존성: `opencv` (`cv2`), `numpy`, `matplotlib` (Jetson 시스템 패키지, 버전: `<python3 -c "import cv2; print(cv2.__version__)" 결과>`)
-- 입력 이미지: `src/images/basketball_crop.jpg` (강의 제공)
-
 ## 실행 방법
 ```bash
 source .venv/bin/activate
