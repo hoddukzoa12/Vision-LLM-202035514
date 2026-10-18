@@ -25,9 +25,9 @@ def kalman_filter(mu_prev, sigma_prev, z):
     if z is None:
         return mu_bar, sigma_bar
     else:
-        K_t = sigma_bar.dot(C_t.transpose()).dot(inv(C_t.dot(sigma_bar).dot(C_t.transpose()) + Q_t))
-        mu = mu_bar + K_t.dot(z - C_t.dot(mu_bar))
-        sigma = (np.identity(2) - K_t.dot(C_t)).dot(sigma_bar)
+        k_t = sigma_bar.dot(C_t.transpose()).dot(inv(C_t.dot(sigma_bar).dot(C_t.transpose()) + Q_t))
+        mu = mu_bar + k_t.dot(z - C_t.dot(mu_bar))
+        sigma = (np.identity(2) - k_t.dot(C_t)).dot(sigma_bar)
         return mu, sigma
 
 
@@ -61,17 +61,23 @@ while True:
 
     # TODO: 객체의 중심과 반지름을 구해 프레임 위에 overlay
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    detected = False
     if len(contours) > 0:
         largest_contour = max(contours, key=cv2.contourArea)
         (x,y), radius = cv2.minEnclosingCircle(largest_contour)
 
         if radius > MIN_RADIUS:
+            detected = True
             center = (int(x),int(y))
             cv2.circle(frame, center, int(radius),(0,255,0),2)
             cv2.circle(frame, center, 5, (0,0,255), -1)
             cv2.putText(frame, f"{center} r={int(radius)}", (center[0] + 10, center[1] - 10),cv2.FONT_HERSHEY_SIMPLEX,0.6,(0,255,0),2)
 
-    if found and len(contours) > 0:
+            if not found:
+                mu_t = np.array([[center[0], center[1]], [0, 0]], dtype=float)
+                found = True
+
+    if found and detected:
         mu_t, sigma_t = kalman_filter(mu_t,sigma_t,np.array([list(center)]))
     elif found:
         mu_t, sigma_t = kalman_filter(mu_t,sigma_t,None)
