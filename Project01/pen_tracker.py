@@ -24,7 +24,7 @@ PIPELINE = (
 GREEN_LOWER = np.array([30, 60, 90], dtype=np.uint8)
 GREEN_UPPER = np.array([230, 115, 180], dtype=np.uint8)
 KERNEL = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-MIN_AREA = 500  # 이보다 작은 contour는 노이즈로 보고 버림
+MIN_AREA = 150  # 이보다 작은 contour는 노이즈로 보고 버림 (손에 쥔 펜은 보이는 부분이 300~800px 정도로 작음)
 
 
 def open_camera():
