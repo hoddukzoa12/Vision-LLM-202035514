@@ -36,6 +36,7 @@ python3 main.py
 ```
 - `q`: 종료
 - 창을 띄우므로 Jetson에 연결한 모니터에서 실행합니다.
+- GStreamer가 없는 환경(Mac 등)에서는 `open_camera()`가 기본 카메라 0번을 640×480으로 엽니다. 이때는 `pip install opencv-python mediapipe numpy`로 만든 별도 가상환경에서 실행합니다 (Jetson에서는 이 명령을 쓰지 않습니다).
 - 단계별 확인용: `python3 pen_tracker.py` (펜 추적만), `python3 hand_gesture.py` (제스처만)
 
 ## 구현 설명

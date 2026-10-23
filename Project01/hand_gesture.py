@@ -14,7 +14,7 @@ import numpy as np
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-from pen_tracker import PIPELINE
+from pen_tracker import open_camera
 
 MODEL_PATH = Path(__file__).resolve().parent / "models" / "hand_landmarker.task"
 
@@ -102,7 +102,7 @@ def draw_hand(frame, hand):
 
 
 def main():
-    cap = cv2.VideoCapture(PIPELINE, cv2.CAP_GSTREAMER)
+    cap = open_camera()
     hand_detector = create_hand_detector()
 
     while True:

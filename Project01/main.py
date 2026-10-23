@@ -13,7 +13,7 @@ import cv2
 import numpy as np
 
 from hand_gesture import count_fingers, create_hand_detector, draw_hand, find_gesture_hand
-from pen_tracker import PIPELINE, create_kalman, find_pen_tip, reset_kalman, smooth_tip
+from pen_tracker import create_kalman, find_pen_tip, open_camera, reset_kalman, smooth_tip
 
 # 손가락 개수 → 모드
 MODES = {1: "DRAW", 2: "STOP", 5: "CLEAR"}
@@ -68,7 +68,7 @@ def draw_status(frame, mode, finger_count, labels, pen_visible):
 
 
 def main():
-    cap = cv2.VideoCapture(PIPELINE, cv2.CAP_GSTREAMER)
+    cap = open_camera()
     hand_detector = create_hand_detector()
     kalman = create_kalman()
 

@@ -27,6 +27,16 @@ KERNEL = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
 MIN_AREA = 500  # 이보다 작은 contour는 노이즈로 보고 버림
 
 
+def open_camera():
+    """Jetson은 셀 [245] GStreamer 파이프라인, GStreamer가 없는 환경(Mac 등)은 기본 카메라 0번을 연다."""
+    cap = cv2.VideoCapture(PIPELINE, cv2.CAP_GSTREAMER)
+    if not cap.isOpened():
+        cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    return cap
+
+
 def find_pen_tip(frame):
     """초록 펜 contour의 가장 위쪽 점(펜 끝)과 binary mask를 반환한다. 펜이 없으면 tip은 None."""
     frame_blur = cv2.GaussianBlur(frame, (7, 7), 0)
@@ -95,7 +105,7 @@ def smooth_tip(kalman, tip):
 
 
 def main():
-    cap = cv2.VideoCapture(PIPELINE, cv2.CAP_GSTREAMER)
+    cap = open_camera()
     kalman = create_kalman()
     found = False
 
