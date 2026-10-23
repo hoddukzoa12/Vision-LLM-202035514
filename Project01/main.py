@@ -1,7 +1,7 @@
 """Project01 — 손가락 제스처 화이트보드.
 
 오른손으로 든 초록 펜의 끝을 추적해 화면에 그림을 그리고,
-왼손의 펼친 손가락 개수로 모드를 고른다 (1개: 그리기 / 2개: 멈춤 / 5개: 전체 지우기).
+왼손의 펼친 손가락 개수로 모드를 고른다 (1개: 그리기 / 2개: 멈춤 / 손바닥 펴기: 전체 지우기).
 
 구성:
     pen_tracker.py   초록 펜 끝 검출 + 칼만 필터 보정
@@ -15,8 +15,8 @@ import numpy as np
 from hand_gesture import count_fingers, create_hand_detector, draw_hand, find_gesture_hand
 from pen_tracker import create_kalman, find_pen_tip, open_camera, reset_kalman, smooth_tip
 
-# 손가락 개수 → 모드
-MODES = {1: "DRAW", 2: "STOP", 5: "CLEAR"}
+# 손가락 개수 (엄지 제외) → 모드
+MODES = {1: "DRAW", 2: "STOP", 4: "CLEAR"}
 GESTURE_HOLD_FRAMES = 5  # 같은 손가락 개수가 이만큼 연속으로 나와야 모드를 바꿈 (흔들림 방지)
 
 INK_COLOR = (255, 0, 255)  # 그림 색 (BGR, 자홍색)

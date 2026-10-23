@@ -27,9 +27,9 @@ CONNECTIONS = vision.HandLandmarksConnections.HAND_CONNECTIONS  # 각 landmark�
 FINGER_TIPS = (4, 8, 12, 16, 20)  # 손가락 끝 landmark의 index
 ANGLE_THRESHOLD = 160             # 손가락 펼쳐짐 여부 판단 각도 임계값
 
-# 각 손가락의 각도를 계산할 landmark index
+# 각 손가락의 각도를 계산할 landmark index.
+# 엄지는 접어도 1-2-3 각도가 160° 안팎으로 펴진 손가락과 구분되지 않아 세지 않는다 (펼친 손바닥 = 4개).
 FINGER_ANGLE_POINTS = (
-    (1, 2, 3),      # 엄지: 2번 중심
     (5, 6, 7),      # 검지: 6번 중심
     (9, 10, 11),    # 중지: 10번 중심
     (13, 14, 15),   # 약지: 14번 중심
@@ -79,7 +79,7 @@ def find_gesture_hand(frame, hand_detector):
 
 
 def count_fingers(hand):
-    """셀 [277]: 손가락마다 관절 각도가 ANGLE_THRESHOLD 이상이면 펼친 것으로 센다 (한 손만)."""
+    """셀 [277]: 엄지를 뺀 네 손가락마다 관절 각도가 ANGLE_THRESHOLD 이상이면 펼친 것으로 센다 (한 손만)."""
     finger_count = 0
     for point1_idx, point2_idx, point3_idx in FINGER_ANGLE_POINTS:
         angle = calculate_angle(hand[point1_idx], hand[point2_idx], hand[point3_idx])
