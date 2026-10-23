@@ -1,7 +1,8 @@
 """Project01 — 손가락 제스처 화이트보드.
 
 오른손으로 든 초록 펜의 끝을 추적해 화면에 그림을 그리고,
-왼손의 펼친 손가락 개수로 모드를 고른다 (1개: 그리기 / 2개: 멈춤 / 손바닥 펴기: 전체 지우기).
+왼손의 펼친 손가락 개수로 모드를 고른다 (1개: 그리기 / 2개: 지우개 / 손바닥 펴기: 전체 지우기).
+제스처를 하고 있는 동안만 동작하고, 그 밖의 자세이거나 왼손이 안 보이면 멈춘다.
 
 구성:
     pen_tracker.py   초록 펜 끝 검출 + 칼만 필터 보정
@@ -15,12 +16,15 @@ import numpy as np
 from hand_gesture import count_fingers, create_hand_detector, draw_hand, find_gesture_hand
 from pen_tracker import create_kalman, find_pen_tip, open_camera, reset_kalman, smooth_tip
 
-# 손가락 개수 (엄지 제외) → 모드
-MODES = {1: "DRAW", 2: "STOP", 4: "CLEAR"}
-GESTURE_HOLD_FRAMES = 5  # 같은 손가락 개수가 이만큼 연속으로 나와야 모드를 바꿈 (흔들림 방지)
+# 손가락 개수 (엄지 제외) → 모드. 표에 없는 개수이거나 왼손이 없으면 "STOP"
+MODES = {1: "DRAW", 2: "ERASE", 4: "CLEAR"}
+GESTURE_HOLD_FRAMES = 5  # 같은 모드가 이만큼 연속으로 나와야 모드를 바꿈 (흔들림 방지)
 
 INK_COLOR = (255, 0, 255)  # 그림 색 (BGR, 자홍색)
 INK_THICKNESS = 5
+ERASER_THICKNESS = 40
+# 펜이 지나간 자리에 캔버스에 긋는 선 (색, 두께). 지우개는 검은색(= 그림 없음)으로 긋는다
+STROKES = {"DRAW": (INK_COLOR, INK_THICKNESS), "ERASE": ((0, 0, 0), ERASER_THICKNESS)}
 MAX_JUMP = 80  # 펜 끝이 한 프레임에 이보다 멀리 튀면 오검출로 보고 새 선을 시작 (px)
 
 TEXT_COLOR = (0, 255, 255)
@@ -28,23 +32,21 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def update_mode(mode, finger_count, candidate, hold_count):
-    """같은 손가락 개수가 GESTURE_HOLD_FRAMES 프레임 연속일 때만 모드를 바꾼다.
+    """손가락 개수가 가리키는 모드가 GESTURE_HOLD_FRAMES 프레임 연속일 때만 모드를 바꾼다.
 
-    candidate는 직전 프레임까지 이어진 손가락 개수, hold_count는 그 연속 프레임 수.
-    제스처 손이 없으면 (finger_count is None) 현재 모드를 유지한다.
+    candidate는 직전 프레임까지 이어진 모드, hold_count는 그 연속 프레임 수.
+    제스처 손이 없으면 finger_count가 None이고, MODES에 없으므로 "STOP"이 된다.
     반환: (mode, candidate, hold_count)
     """
-    if finger_count is None:
-        return mode, None, 0
-
-    if finger_count == candidate:
+    new_mode = MODES.get(finger_count, "STOP")
+    if new_mode == candidate:
         hold_count += 1
     else:
-        candidate = finger_count
+        candidate = new_mode
         hold_count = 1
 
-    if hold_count >= GESTURE_HOLD_FRAMES and candidate in MODES:
-        mode = MODES[candidate]
+    if hold_count >= GESTURE_HOLD_FRAMES:
+        mode = candidate
     return mode, candidate, hold_count
 
 
@@ -108,11 +110,11 @@ def main():
         # 3. 캔버스에 그리기
         if mode == "CLEAR":
             canvas[:] = 0
-            mode = "STOP"  # 한 번 지운 뒤에는 멈춤 상태로
 
-        if mode == "DRAW" and point is not None:
+        if mode in STROKES and point is not None:
+            color, thickness = STROKES[mode]
             if prev_point is not None:
-                cv2.line(canvas, prev_point, point, INK_COLOR, INK_THICKNESS)
+                cv2.line(canvas, prev_point, point, color, thickness)
             prev_point = point
         else:
             prev_point = None  # 멈춤이거나 펜이 안 보이면 선을 끊음
@@ -123,7 +125,8 @@ def main():
             draw_hand(frame, hand)
         if point is not None:
             pen_color = INK_COLOR if mode == "DRAW" else (200, 200, 200)
-            cv2.circle(frame, point, 10, pen_color, 2)
+            pen_radius = ERASER_THICKNESS // 2 if mode == "ERASE" else 10
+            cv2.circle(frame, point, pen_radius, pen_color, 2)
         draw_status(frame, mode, finger_count, labels, point is not None)
 
         cv2.imshow("Finger Gesture Whiteboard", frame)
