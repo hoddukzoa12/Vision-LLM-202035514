@@ -17,11 +17,16 @@
 
 | Day | 날짜 | 실습 노트북 | 과제 |
 |---|---|---|---|
-| Day01 | 10/10 (토) | [`00_Initial-Setup`](00_Initial-Setup.ipynb), [`01_Linux-and-Python`](01_Linux-and-Python.ipynb) | [`2026-10-10/`](2026-10-10/) |
+| Day01 | 10/10 (토) | [`00_Initial-Setup`](00_Initial-Setup.ipynb), [`01_Linux-and-Python`](01_Linux-and-Python.ipynb) | [`2026-10-10/`](2026-10-10/) NumPy TODO, Section Project |
+| Day02 | 10/11 (일) | [`02_Computer-Vision`](02_Computer-Vision.ipynb) | – |
+| Day03 | 10/17 (토) | [`02_Computer-Vision`](02_Computer-Vision.ipynb) | [`2026-10-17/`](2026-10-17/) 모폴로지로 농구공 Contour 선택 |
+| Day04 | 10/18 (일) | [`2026-10-18/practice/`](2026-10-18/practice/) (Jetson 카메라, 객체 추적, MediaPipe 실습) | – (프로젝트 #1 부여) |
+| Day05 | 10/24 (토) | 프로젝트 #1 발표, [`03_DL-and-GPU`](03_DL-and-GPU.ipynb) | – |
+| Day06 | 10/25 (일) | [`03_DL-and-GPU`](03_DL-and-GPU.ipynb) | [`2026-10-25/`](2026-10-25/) CNN 그래프·Feature Map, CuPy 잔상 효과·Convolution |
 
 | 프로젝트 | 주제 | 상태 |
 |---|---|---|
-| [Project01](Project01/) | 손가락 제스처 화이트보드 (초록 펜 추적 + 왼손 손가락 제스처) | 구현 완료, Jetson 시연 확인 중 |
+| [Project01](Project01/) | 손가락 제스처 화이트보드 (초록 펜 추적 + 왼손 손가락 제스처) | 발표 완료 (10/24) |
 | Project02 | – | – |
 | Project03 (최종) | – | – |
 
