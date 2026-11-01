@@ -63,6 +63,11 @@ def relu(x):
     return np.maximum(0, x)
 
 
+# relu()의 CuPy 버전 (np → cp만 바뀜)
+def relu_cp(x):
+    return cp.maximum(0, x)
+
+
 # 셀 [117]
 def convolution2d(image, kernel, bias=0.0, stride=1, padding=0):
     """2차원 이미지에 하나의 CNN 필터를 적용 (NumPy, 출력 픽셀을 하나씩 계산)."""
@@ -112,7 +117,7 @@ def convolution2d_cp(image, kernel, bias=0.0, stride=1, padding=0):
 
     kernel_height, kernel_width = kernel.shape
 
-    # convolution2d()와 같은 zero padding (GPU 배열)
+    # 이미지 가장자리에 zero padding 적용 (np.pad → cp.pad)
     padded_image = cp.pad(
         image,
         ((padding, padding), (padding, padding)),
@@ -120,14 +125,15 @@ def convolution2d_cp(image, kernel, bias=0.0, stride=1, padding=0):
         constant_values=0
     )
 
-    # 출력 크기 계산도 convolution2d()와 같음
+    # Convolution 출력 크기 = floor((H + 2P - K) / S) + 1
     output_height = (padded_image.shape[0] - kernel_height) // stride + 1
     output_width = (padded_image.shape[1] - kernel_width) // stride + 1
 
     output = cp.zeros((output_height, output_width), dtype=cp.float32)
 
-    # 커널 원소 (kernel_y, kernel_x) 하나를 고르고,
-    # 모든 출력 위치에서 그 원소와 곱해질 입력 픽셀을 한 번에 slicing해 누적한다
+    # 여기까지는 convolution2d()와 같고, 반복 대상만 다르다
+    #   CPU: 출력 픽셀 (output_y, output_x)를 하나씩 → 커널 크기 영역의 가중합
+    #   GPU: 커널 원소 (kernel_y, kernel_x)를 하나씩 → 모든 출력 위치에 대응하는 입력을 한 번에 누적
     for kernel_y in range(kernel_height):
         for kernel_x in range(kernel_width):
             # 출력 (output_y, output_x)에 대응하는 입력은
@@ -195,11 +201,11 @@ def main():
     # 2) 워밍업: 작은 이미지로 한 번 실행해 GPU 초기화·커널 준비 시간을 측정에서 뺌
     warmup_image = cp.zeros((64, 64), dtype=cp.float32)
 
-    _ = convolution2d_cp(warmup_image, dx_filter_cp, bias=DX_BIAS, stride=1, padding=1)
+    _ = relu_cp(convolution2d_cp(warmup_image, dx_filter_cp, bias=DX_BIAS, stride=1, padding=1))
 
     cp.cuda.Stream.null.synchronize()
 
-    # 3) 처리: GPU 연산 시간만 측정
+    # 3) 처리: CPU와 같은 구간(dx + dy convolution)만 측정
     cp.cuda.Stream.null.synchronize()
 
     gpu_start = time.perf_counter()
@@ -213,11 +219,17 @@ def main():
 
     gpu_time = gpu_end - gpu_start
 
-    # 4) ReLU는 GPU에서 적용한 뒤, 결과를 CPU로 복사
+    # CPU와 같이 측정 구간 밖에서 ReLU 적용 (GPU 배열 그대로)
+    relu_dx_cp = relu_cp(output_dx_cp)
+    relu_dy_cp = relu_cp(output_dy_cp)
+
+    cp.cuda.Stream.null.synchronize()
+
+    # 4) 변환: GPU → CPU
     download_start = time.perf_counter()
 
-    relu_dx_cp_np = cp.asnumpy(cp.maximum(0, output_dx_cp))
-    relu_dy_cp_np = cp.asnumpy(cp.maximum(0, output_dy_cp))
+    relu_dx_cp_np = cp.asnumpy(relu_dx_cp)
+    relu_dy_cp_np = cp.asnumpy(relu_dy_cp)
 
     download_end = time.perf_counter()
 
@@ -244,7 +256,7 @@ def main():
     print("========== CuPy GPU ==========")
     print(f"CPU to GPU: {upload_time:.4f} seconds")
     print(f"GPU processing (dx + dy): {gpu_time:.4f} seconds")
-    print(f"ReLU + GPU to CPU: {download_time:.4f} seconds")
+    print(f"GPU to CPU: {download_time:.4f} seconds")
     print(f"Total GPU time: {gpu_total_time:.4f} seconds")
     print()
 

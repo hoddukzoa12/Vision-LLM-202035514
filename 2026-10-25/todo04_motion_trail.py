@@ -84,12 +84,15 @@ def motion_trail_cp(image, weights):
     height, width = image.shape
     output = cp.zeros((height, width), dtype=cp.float32)
 
+    # motion_trail_np()의 output_y, output_x 반복문 두 개가 slicing으로 바뀌고, shift 반복만 남는다
     for shift in range(TRAIL_LENGTH):
         # TODO: 배열 slicing
+        # CPU의 input_x = output_x - shift를 모든 픽셀에 한 번에 적용한 것
         input_region = image[:, :width - shift]  # 오른쪽 끝 shift칸을 뺀 원본
-        output_region = output[:, shift:]        # 왼쪽 shift칸을 뺀 출력 (= 오른쪽으로 shift칸 이동한 자리)
+        output_region = output[:, shift:]        # 왼쪽 shift칸을 뺀 출력 (CPU의 input_x < 0 인 칸은 제외됨)
 
         # TODO: GPU가 병렬 연산할 output_region 계산 코드
+        # CPU의 pixel_sum += image[output_y, input_x] * weights[shift]와 같은 식
         output_region += input_region * weights[shift]  # output_region은 output의 view라서 output에 바로 누적됨
 
     return output
