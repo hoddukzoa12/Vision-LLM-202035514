@@ -12,6 +12,13 @@ YOLO로 **휴대폰 사용**과 **자리비움**을, 마이크로 **주변 소�
 | `noise` 소음 | 소음 기준 초과가 2번 연속 (5초마다 측정) | 마이크 (음량) | 조용한 환경을 권하는 한마디 |
 | `question` 질문 | 화면에서 `s` 키 | 마이크 (STT) | 질문에 대한 답변 |
 
+## 발표 자료와 영상
+| 파일 | 내용 |
+|---|---|
+| [`presentation/project03_presentation.pdf`](presentation/project03_presentation.pdf) | 발표 자료 (5쪽) |
+| [`presentation/demo.mp4`](presentation/demo.mp4) | 데모 영상 (37초, 자막 포함): 공개 스톡 영상 4개(공부 → 휴대폰 → 빈 책상 → 공부)를 이어 붙인 테스트 영상에 실제 탐지 화면과 Gemma 음성 응답을 합침 |
+| [`presentation/intro_film.mp4`](presentation/intro_film.mp4) | 프로젝트 소개 영상 (24초) |
+
 ## 구조
 
 ```
