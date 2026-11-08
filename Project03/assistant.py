@@ -70,6 +70,7 @@ FALLBACK_REPLIES = {
     "noise": "주변이 시끄러워요. 조용한 곳에서 집중해 보세요.",
     "question": "죄송해요, 다시 한 번 말씀해 주세요.",
 }
+MIC_ERROR_REPLY = "마이크를 사용할 수 없어요. 연결을 확인해 주세요."
 
 
 def read_state():
@@ -121,7 +122,12 @@ def handle_event(llm, event_type, state, extra_context=""):
 
     if event_type == "question":
         text_to_speech("네, 말씀하세요.")
-        question = speech_to_text()
+        try:
+            question = speech_to_text()
+        except RuntimeError as error:
+            print(f"[마이크 오류] {error}")
+            text_to_speech(MIC_ERROR_REPLY)
+            return
         print(f"[질문] {question or '(인식 실패)'}")
         if not question:
             reply = FALLBACK_REPLIES["question"]
@@ -175,7 +181,12 @@ def main():
         # 2) 소음: 쉬는 동안 NOISE_CHECK_INTERVAL마다 측정 (말한 직후는 제외)
         if state and now - last_noise_check >= NOISE_CHECK_INTERVAL and now - last_speech >= AFTER_SPEECH_DELAY:
             last_noise_check = now
-            noise_db = measure_noise_db()
+            try:
+                noise_db = measure_noise_db()
+            except RuntimeError as error:
+                # 마이크 문제로 Assistant 전체가 멈추지 않도록 이번 측정만 건너뜀 (phone/absent 응답은 계속)
+                print(f"[마이크 오류] {error}")
+                continue
             loud_count = loud_count + 1 if noise_db > NOISE_THRESHOLD_DB else 0
             print(f"[소음] {noise_db:.1f} dBFS ({loud_count}/{NOISE_REPEAT})")
 

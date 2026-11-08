@@ -12,6 +12,8 @@
 """
 
 import math
+import os
+import signal
 import subprocess
 import wave
 from pathlib import Path
@@ -22,9 +24,12 @@ PROJECT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = PROJECT_DIR.parent
 AUDIO_DIR = PROJECT_DIR / "audio"
 
-MIC_DEVICE = "plughw:2,0"  # arecord -l 로 확인한 마이크 card, device 번호
+# arecord -l 의 "card 3: Microphone [USB Microphone]"에서 대괄호 앞 이름(Microphone)으로 지정.
+# card 번호는 USB를 꽂는 순서·부팅마다 바뀌지만 이름은 그대로라 같은 마이크를 찾는다.
+MIC_DEVICE = "plughw:CARD=Microphone,DEV=0"
 RECORD_SECONDS = 5
 NOISE_RECORD_SECONDS = 1
+RECORD_TIMEOUT_MARGIN = 3  # 녹음 시간보다 이만큼(초) 더 걸리면 장치 문제로 보고 중단
 
 WHISPER_PATH = REPO_ROOT / "whisper.cpp" / "build-cpu" / "bin" / "whisper-cli"
 WHISPER_MODEL = REPO_ROOT / "whisper.cpp" / "models" / "ggml-base.bin"
@@ -40,9 +45,11 @@ SILENCE_DB = -100.0  # 완전 무음일 때 log(0)을 피하기 위한 값
 
 
 def record_audio(path, seconds):
-    """06 C: arecord로 16kHz, 16-bit, mono WAV를 녹음한다."""
+    """06 C: arecord로 16kHz, 16-bit, mono WAV를 녹음한다. 실패하거나 멈추면 RuntimeError."""
     AUDIO_DIR.mkdir(exist_ok=True)
-    subprocess.run(
+    # start_new_session=True: pasuspender와 그 자식 arecord를 한 프로세스 그룹으로 묶어,
+    # 멈췄을 때 둘 다 종료할 수 있게 한다 (pasuspender만 죽이면 arecord가 남아 장치를 계속 점유함)
+    process = subprocess.Popen(
         [
             "pasuspender", "--",
             "arecord",
@@ -54,8 +61,16 @@ def record_audio(path, seconds):
             "-q",
             str(path),
         ],
-        check=True,
+        start_new_session=True,
     )
+    try:
+        process.wait(timeout=seconds + RECORD_TIMEOUT_MARGIN)
+    except subprocess.TimeoutExpired:
+        os.killpg(process.pid, signal.SIGKILL)
+        process.wait()
+        raise RuntimeError(f"녹음이 {seconds + RECORD_TIMEOUT_MARGIN}초 안에 끝나지 않음 ({MIC_DEVICE})")
+    if process.returncode != 0:
+        raise RuntimeError(f"녹음 실패 ({MIC_DEVICE}, 종료 코드 {process.returncode})")
 
 
 def speech_to_text():
