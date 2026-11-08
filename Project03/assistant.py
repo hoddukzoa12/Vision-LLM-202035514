@@ -59,7 +59,10 @@ Output Format:
 # 이벤트마다 Gemma에게 줄 요청 문장
 EVENT_REQUESTS = {
     "phone": "학생이 공부 중에 휴대폰을 계속 보고 있다. 휴대폰을 내려놓고 다시 집중하도록 한마디 하시오.",
-    "absent": "학생이 자리를 비웠다. 돌아오면 이어서 공부하자는 짧은 알림을 하시오.",
+    "absent": (
+        "학생이 자리를 비웠고 아직 돌아오지 않았다. '다시 왔다'고 말하지 마시오. "
+        "자리로 돌아와 공부를 이어가자고 부르는 짧은 한마디를 하시오."
+    ),
     "noise": "주변이 너무 시끄러워 집중하기 어렵다. 조용한 환경을 만들도록 권하는 한마디를 하시오.",
 }
 
@@ -93,6 +96,12 @@ def state_to_text(state):
         sentences = [f"현재 카메라에 보이는 물체: {object_text}."]
     else:
         sentences = ["현재 카메라에 보이는 물체가 없다."]
+
+    # "물체가 없다"만으로는 학생이 없다는 뜻인지 Gemma가 헷갈리므로 사람 유무를 따로 적음
+    if "person" in (obj["class"] for obj in state["objects"]):
+        sentences.append("학생은 지금 자리에 앉아 있다.")
+    else:
+        sentences.append("학생은 지금 자리에 없다 (카메라에 사람이 보이지 않는다).")
 
     stats = state["stats"]
     sentences.append(
