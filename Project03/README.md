@@ -64,13 +64,16 @@ YOLO로 **휴대폰 사용**과 **자리비움**을, 마이크로 **주변 소�
 cd ~/vision-llm
 source .venv/bin/activate
 
-# 0) (처음 한 번) 마이크 번호 확인 후 voice.py의 MIC_DEVICE 수정
+# 0) (처음 한 번) 마이크 카드 이름 확인: "card N: Microphone [...]"의 이름이 다르면 voice.py의 MIC_DEVICE(CARD=) 수정
 arecord -l
 
-# 1) (처음 한 번) 소음 기준 정하기: 조용할 때와 떠들 때 값을 보고 assistant.py의 NOISE_THRESHOLD_DB 수정
+# 1) (처음 한 번) 마이크 입력 키우기 (기본 16은 말소리가 조용할 때보다 4~5 dB만 커서 구분이 어려움)
+amixer -c Microphone sset Mic 24
+
+# 2) (처음 한 번) 소음 기준 정하기: 조용할 때와 떠들 때 값을 보고 assistant.py의 NOISE_THRESHOLD_DB 수정
 python3 Project03/voice.py
 
-# 2) 실행 (Assistant와 Vision을 함께 켬)
+# 3) 실행 (Assistant와 Vision을 함께 켬)
 python3 Project03/main.py
 ```
 

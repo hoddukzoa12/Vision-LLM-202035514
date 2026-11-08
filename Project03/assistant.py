@@ -34,7 +34,8 @@ TEMPERATURE = 0.7
 POLL_INTERVAL = 0.1        # state.json 확인 주기 (초)
 EVENT_MAX_AGE = 10.0       # 이보다 오래된 이벤트는 이미 지난 상황이므로 응답하지 않음 (초)
 
-NOISE_THRESHOLD_DB = -30.0  # 이 값보다 크면 시끄러움 (voice.py 단독 실행으로 현장에서 맞출 것)
+NOISE_THRESHOLD_DB = -28.0  # 이 값보다 크면 시끄러움. 실측(마이크 입력 24): 조용함 -36~-31, 말소리 -27~-22
+                            # 환경마다 다르므로 voice.py 단독 실행으로 현장에서 다시 맞출 것
 NOISE_REPEAT = 2            # 연속으로 이만큼 시끄러워야 소음 이벤트
 NOISE_CHECK_INTERVAL = 5.0  # 소음 측정 주기 (초)
 NOISE_ALERT_COOLDOWN = 60.0  # 소음 경고 후 다음 경고까지 최소 간격 (초)
